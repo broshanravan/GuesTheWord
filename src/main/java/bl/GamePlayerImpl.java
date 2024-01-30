@@ -1,9 +1,14 @@
+package bl;
+
+import dl.TextFileWordSelector;
+import dl.TextFileWordSelectorImpl;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class GamePlayerImpl implements GamePlayer{
+public class GamePlayerImpl implements GamePlayer {
 
 
     //static List<String> referenceList = new ArrayList<String>(); //Arrays.asList("Hello","how","have","you*", "been","these", "beautiful", "mornings","my*Starry*word*here","what" );
@@ -28,7 +33,7 @@ public class GamePlayerImpl implements GamePlayer{
     private String getTheRandomReferenceWord(String fileNamePath){
         TextFileWordSelector textFileWordSelector = new TextFileWordSelectorImpl();
         List<String> referenceList = textFileWordSelector.selectRandomCollectionFromFile(fileNamePath);
-        int rand = new Random().nextInt(referenceList.size() - 1 );
+        int rand = new Random().nextInt(0,referenceList.size() - 1 );
         String selectedWord = referenceList.get(rand).toString();
         return selectedWord;
     }
@@ -51,13 +56,15 @@ public class GamePlayerImpl implements GamePlayer{
      * Characters
      * @return
      */
-    public void startTheGame(String fileNamePath, boolean isFirstGame) {
+    public SelectedWord startTheGame(String fileNamePath, boolean isFirstGame) {
         List<String> decryptedCharacterList = new ArrayList<String>();
+        String encrypted = "";
+        String referenceWord = "";
         try {
 
-            String referenceWord = getTheRandomReferenceWord(fileNamePath);
+             referenceWord = getTheRandomReferenceWord(fileNamePath);
 
-            String encrypted = encrypt(referenceWord, decryptedCharacterList);
+             encrypted = encrypt(referenceWord, decryptedCharacterList);
             if (isFirstGame){
                 System.out.println("The player needs to guess the word by attempting to guess encrypting letters.\r\n" +
                         "After Three consecutive wrong guesses the player will loos\r\n" +
@@ -105,6 +112,10 @@ public class GamePlayerImpl implements GamePlayer{
             ioe.printStackTrace();
         }
 
+        SelectedWord SelectedWord = new SelectedWord(encrypted, referenceWord);
+
+        return SelectedWord;
+
     }
     private int getNumberOfdecriptedCharacter(String referenceWord, List<String>decryptedCharacterList){
         int numberOfDecryptedCharacters = 0;
@@ -119,13 +130,13 @@ public class GamePlayerImpl implements GamePlayer{
     }
 
     public void continueTheGame(String fileNamePath) throws IOException {
-        System.out.println("Would you like to continue y/n");
+        System.out.println("Would you like to have another go? y/n");
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(System.in));
         String input = reader.readLine();
         List<String> acceptedAnswers = List.of("yes","y", "no", "n");
         while(!acceptedAnswers.contains(input)){
-            System.err.println("Wrong option, please try again");
+            System.err.println("Wrong option, please try again (y/n)");
             input = reader.readLine();
         }
         if("y".equalsIgnoreCase(input) || "yes".equalsIgnoreCase(input) ){
@@ -142,7 +153,7 @@ public class GamePlayerImpl implements GamePlayer{
         gamePlayer.startTheGame(fileNamePath,true);
 
     }
-
+/**************************************************************improvement***********************************************************************************/
     public void play(String referenceWord) throws IOException {
         List<String> decryptedCharacterList = new ArrayList<String>();
         String encrypted = encrypt(referenceWord, decryptedCharacterList);

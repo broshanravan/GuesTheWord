@@ -1,10 +1,12 @@
+package dl;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class TextFileWordSelectorImpl implements TextFileWordSelector{
+public class TextFileWordSelectorImpl implements TextFileWordSelector {
 
     private long getNumberOfLines(String fileNamePath) {
         Path path = Paths.get(fileNamePath);
